@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "695442389032",
+    "project_id": "discord-type",
+    "storage_bucket": "discord-type.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:695442389032:android:7d83e2fc6476ed64c0dd1d",
+        "android_client_info": {
+          "package_name": "com.example.discordtype"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "695442389032-mia3ibrne2etvketji9sqfahhsuggu7e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDKqwP2F-wC80QTDpPM9ekXYwBYpURJfQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "695442389032-mia3ibrne2etvketji9sqfahhsuggu7e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
