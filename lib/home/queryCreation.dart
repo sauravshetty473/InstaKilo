@@ -154,6 +154,7 @@ class _QueryPostState extends State<QueryPost> {
           "now" : formattedDate,
           "solved" : "no",
           "username" : username,
+          "Likes" : <String>[]
         }
     );
 

@@ -239,7 +239,7 @@ class _HomeState extends State<Home> {
                 children: [
                   Column(
                     children: [
-                      ...sortAll(query.docs.where((element) => (element.get("course")==chooseCourse||chooseCourse==courseItems[0])&&(element.get("level")==chooseLevel||chooseLevel==levelItems[0])).toList(), chooseSort).map((e) => post.Post(question: e.get("Question"), attachments: List.from(e.get("imageURLS")), level: e.get("level"), course: e.get("course"), due: e.get("due"), queryID: e.id, solved: e.get("solved"), date: e.get("now"), username: e.get("username"), userID: e.get("userID"),)).toList(),
+                      ...sortAll(query.docs.where((element) => (element.get("course")==chooseCourse||chooseCourse==courseItems[0])&&(element.get("level")==chooseLevel||chooseLevel==levelItems[0])).toList(), chooseSort).map((e) => post.Post(question: e.get("Question"), attachments: List.from(e.get("imageURLS")), level: e.get("level"), course: e.get("course"), due: e.get("due"), queryID: e.id, solved: e.get("solved"), date: e.get("now"), username: e.get("username"), userID: e.get("userID"), Likes: e.get('Likes'),)).toList(),
                       Container(height: 100,),
                     ],
                   )

@@ -21,10 +21,22 @@ class Post extends StatelessWidget {
   String level;
   String course;
   String queryID;
-  Post({this.question, this.attachments, this.due,this.level,this.course, this.queryID, this.notComment, this.solved, this.mine, this.username, this.date, this.userID});
+  List Likes;
+  Post({this.question, this.attachments, this.due,this.level,this.course, this.queryID, this.notComment, this.solved, this.mine, this.username, this.date, this.userID, this.Likes});
 
   @override
   Widget build(BuildContext context) {
+    int likes = 0;
+    int dislikes = 0;
+    for(String i in Likes){
+      if(i.contains(':1')){
+        likes++;
+      }
+      else{
+        dislikes++;
+      }
+    }
+
     var myID = Provider.of<CustomUser>(context, listen: false).uid;
 
     return ConstrainedBox(
@@ -185,29 +197,103 @@ class Post extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        FlatButton(
 
-                          minWidth: 0,
-                          padding: EdgeInsets.all(0),
-                          onPressed: (){
+                        Column(
+                          children: [
+                            FlatButton(
+                              minWidth: 0,
+                              padding: EdgeInsets.all(0),
+                              onPressed: () async{
+                                final user = Provider.of<CustomUser>(context, listen: false);
+                                try{
+                                  List midList = await DatabaseService().query.doc(queryID).get().then((value) => value.get('Likes'));
+                                  bool found = false;
+                                  for(String i in midList){
+                                    if(i.contains(user.uid)){
+                                      var mid = i;
+                                      midList.remove(i);
+                                      if(!mid.contains(':1')){
+                                        midList.add(user.uid + ':1');
+                                      }
 
-                          },
-                          child: Icon(Icons.thumb_up_alt_sharp,          color: Color.fromARGB(255,163,63,113),),
+
+                                      found = true;
+                                      break;
+                                    }
+                                  }
+                                  if(!found){
+                                    midList.add(user.uid + ':1');
+                                  }
+                                  await DatabaseService().query.doc(queryID).update({
+                                    'Likes' : midList,
+                                  });
+                                }
+                                catch(Exception){
+                                  await DatabaseService().query.doc(queryID).update({
+                                    'Likes' : [user.uid + ":1"]
+                                  });
+                                }
+                              },
+                              child: Icon(Icons.thumb_up_alt_sharp,          color: Color.fromARGB(255,163,63,113),),
+                            ),
+
+                            Text(likes.toString()),
+
+
+                          ],
                         ),
 
 
 
+                        Column(
+                          children: [
+                            FlatButton(
+
+                              minWidth: 0,
+                              padding: EdgeInsets.all(0),
+                              onPressed: () async{
+                                final user = Provider.of<CustomUser>(context, listen: false);
+                                try{
+                                  List midList = await DatabaseService().query.doc(queryID).get().then((value) => value.get('Likes'));
+                                  bool found = false;
+                                  for(String i in midList){
+                                    if(i.contains(user.uid)){
+                                      var mid = i;
+                                      midList.remove(i);
+                                      if(!mid.contains(':0')){
+                                        midList.add(user.uid + ':0');
+                                      }
 
 
-                        FlatButton(
+                                      found = true;
+                                      break;
+                                    }
+                                  }
+                                  if(!found){
+                                    midList.add(user.uid + ':0');
+                                  }
+                                  await DatabaseService().query.doc(queryID).update({
+                                    'Likes' : midList,
+                                  });
+                                }
+                                catch(Exception){
+                                  await DatabaseService().query.doc(queryID).update({
+                                    'Likes' : [user.uid + ":0"]
+                                  });
+                                }
+                              },
+                              child: Icon(Icons.thumb_down,          color: Color.fromARGB(255,163,63,113),),
+                            ),
 
-                          minWidth: 0,
-                          padding: EdgeInsets.all(0),
-                          onPressed: (){
+                            Text(dislikes.toString())
+                          ],
+                        )
 
-                          },
-                          child: Icon(Icons.thumb_down,          color: Color.fromARGB(255,163,63,113),),
-                        ),
+
+
+
+
+
 
                       ],
                     ),

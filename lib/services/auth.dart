@@ -21,9 +21,14 @@ class AuthService{
     return _auth.authStateChanges().map((User user){
       if(user!=null)
       {
-        Fluttertoast.showToast(msg: "logged in successfully");
-        return _cuserfromUser(user);
-      }
+        if(user.emailVerified||user.isAnonymous)
+        {
+          Fluttertoast.showToast(msg: user.emailVerified?"your email has been verified":"Anonymous login");
+          return _cuserfromUser(user);
+        }
+        else{
+          return null;
+        }}
       else{
         return _cuserfromUser(user);
       }
@@ -48,7 +53,15 @@ class AuthService{
     try{
       UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       User user = result.user;
-      return CustomUser(user.uid,!user.isAnonymous, user.email,user.emailVerified);
+      await user.sendEmailVerification().whenComplete(() {
+        if(!user.emailVerified){
+          Fluttertoast.showToast(msg: "Email Verification sent");
+        }
+        else{
+          Fluttertoast.showToast(msg: "The email address is already verified");
+        }
+        return CustomUser(user.uid,!user.isAnonymous, user.email,user.emailVerified);
+      });
     }
     catch(e){
       print(e.toString());
@@ -61,7 +74,11 @@ class AuthService{
       await _auth.signOut();
       UserCredential result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       User user = result.user;
-      return CustomUser(user.uid,!user.isAnonymous, user.email,user.emailVerified);
+      if(user.emailVerified)
+        return CustomUser(user.uid,!user.isAnonymous, user.email,user.emailVerified);
+      Fluttertoast.showToast(msg: 'email is not verified');
+      return null;
+
     }
     catch(e){
       print(e.toString());

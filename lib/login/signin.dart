@@ -1,4 +1,5 @@
 import 'package:discordtype/shared/loading.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:discordtype/services/auth.dart';
 import 'package:discordtype/shared/constants.dart';
@@ -118,8 +119,13 @@ class _SignInState extends State<SignIn> {
                                           loading =true;
                                         });
                                         dynamic result =await _auth.signInWithEmailPassword(email, password);
-                                        if(result==null)
+                                        setState(() {
+                                          loading = false;
+                                        });
+
+                                        if(result.runtimeType!=User)
                                         {
+                                          Fluttertoast.showToast(msg: 'An error occurred');
                                           setState(() {
                                             error ="password and email do not match";
                                             loading =false;
@@ -127,7 +133,9 @@ class _SignInState extends State<SignIn> {
                                         }
                                         else
                                         {
-                                          //Navigator.pop(context);
+                                          setState(() {
+                                            loading = false;
+                                          });
 
                                         }
                                       }
